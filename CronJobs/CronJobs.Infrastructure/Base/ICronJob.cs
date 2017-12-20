@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace CronJobs.Infrastructure.Base
+namespace CronJobs.Infrastructure
 {
     public interface ICronJob
     {

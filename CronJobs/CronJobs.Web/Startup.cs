@@ -1,3 +1,6 @@
+using CronJobs.Infrastructure;
+using CronJobs.Infrastructure.Extensions;
+using CronJobs.Web.Concretes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -16,6 +19,9 @@ namespace CronJobs.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddJobServer(options => {
+                options.Register<SimpleJob>(Cron.EveryMinute());
+            });
             services.AddMvc();
         }
 
@@ -32,7 +38,6 @@ namespace CronJobs.Web
             }
 
             app.UseStaticFiles();
-
             app.UseMvcWithDefaultRoute();
         }
     }

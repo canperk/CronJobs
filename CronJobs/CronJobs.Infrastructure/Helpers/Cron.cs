@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CronJobs.Infrastructure.Helpers
+namespace CronJobs.Infrastructure
 {
     public static class Cron
     {

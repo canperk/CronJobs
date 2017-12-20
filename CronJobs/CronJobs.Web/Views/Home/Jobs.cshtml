@@ -1,0 +1,37 @@
+﻿@model IEnumerable<JobViewModel>
+@{
+    ViewData["Title"] = "Jobs";
+}
+<h2>Jobs</h2>
+<div class="alert alert-info">
+    Next scheduled times are limited to 10 times for next 24 hours
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Job Id</th>
+            <th>Job Type</th>
+            <th>Job Cron</th>
+            <th>Next Scheduled Times</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+                <td>@item.Cron</td>
+                <td>
+                    <ul>
+                        @foreach (var cron in item.ScheduledTimes)
+                        {
+                            <li>@cron</li>
+                        }
+                    </ul>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

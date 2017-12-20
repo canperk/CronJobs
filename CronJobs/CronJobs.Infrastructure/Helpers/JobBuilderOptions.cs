@@ -7,7 +7,10 @@ namespace CronJobs.Infrastructure
     public class JobBuilderOptions
     {
         internal List<JobDescriptor> JobList { get; }
-
+        public IReadOnlyCollection<JobDescriptor> GetJobs()
+        {
+            return JobList.AsReadOnly();
+        }
         public JobBuilderOptions()
         {
             JobList = new List<JobDescriptor>();

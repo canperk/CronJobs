@@ -21,6 +21,7 @@ namespace CronJobs.Web
         {
             services.AddJobServer(options => {
                 options.Register<SimpleJob>(Cron.EveryMinute());
+                options.Register<SimpleJob>(Cron.Hourly(0));
             });
             services.AddMvc();
         }

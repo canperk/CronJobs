@@ -40,6 +40,7 @@ namespace CronJobs.Web
 
             app.UseStaticFiles();
             app.UseMvcWithDefaultRoute();
+            app.UseJobServer();
         }
     }
 }

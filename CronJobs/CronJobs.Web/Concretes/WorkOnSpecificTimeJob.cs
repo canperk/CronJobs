@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace CronJobs.Web.Concretes
 {
-    public class SimpleJob : ICronJob
+    public class WorkOnSpecificTimeJob : ICronJob
     {
-        public SimpleJob()
+        public WorkOnSpecificTimeJob()
         {
             Key = Guid.NewGuid();
         }
@@ -15,7 +15,7 @@ namespace CronJobs.Web.Concretes
 
         public Task Invoke()
         {
-            using (var writer = new StreamWriter($"{nameof(SimpleJob)}.txt", true))
+            using (var writer = new StreamWriter($"{nameof(WorkOnSpecificTimeJob)}.txt", true))
             {
                 writer.WriteLine(DateTime.Now.ToString());
             }

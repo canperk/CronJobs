@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CronJobs.Infrastructure
@@ -16,17 +14,30 @@ namespace CronJobs.Infrastructure
             _options = options;
             _app = app;
         }
-        internal Task Start()
+        internal async Task Start()
         {
-            return Task.Factory.StartNew(() => {
-                while (true)
+            _options.JobList.ForEach((job) =>
+            {
+                Task.Factory.StartNew(async () =>
                 {
-                    _options.JobList.ForEach((job) => {
+                    while (true)
+                    {
                         var j = (ICronJob)_app.ApplicationServices.GetService(job.Type);
-                        j.Invoke();
-                    });
-                }
+                        await j.Invoke();
+                        var currentTime = DateTime.Now.AddSeconds(-DateTime.Now.Second);
+                        DateTime nextTime = DateTime.Now;
+                        var nextJobTimes = job.Cron.GetNextOccurrences(currentTime, DateTime.MaxValue);
+                        foreach (var next in nextJobTimes)
+                        {
+                            nextTime = next;
+                            break;
+                        }
+                        var waitTime = nextTime - currentTime;
+                        await Task.Delay(waitTime);
+                    }
+                });
             });
+            await Task.CompletedTask;
         }
     }
 }

@@ -17,7 +17,7 @@ namespace CronJobs.Infrastructure.Extensions
                 throw new ArgumentNullException(nameof(setup));
             }
 
-            var opts = new JobBuilderOptions();
+            var opts = new JobBuilderOptions(services);
             setup?.Invoke(opts);
             services.AddSingleton(opts);
 

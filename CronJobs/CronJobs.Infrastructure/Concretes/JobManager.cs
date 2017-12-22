@@ -14,18 +14,34 @@ namespace CronJobs.Infrastructure
             _options = options;
             _app = app;
         }
-        internal async Task Start()
+        internal Task Start()
         {
             _options.JobList.ForEach((job) =>
             {
                 Task.Factory.StartNew(async () =>
                 {
+                    var firstCheck = true;
                     while (true)
                     {
+                        #region One Time Check
+                        if (firstCheck)
+                        {
+                            var firstnow = DateTime.Now;
+                            var firstRunTime = job.Cron.GetNextOccurrence(firstnow);
+                            var diff = firstRunTime - firstnow;
+                            await Task.Delay(diff);
+                            firstCheck = false;
+                        } 
+                        #endregion
+
                         var j = (ICronJob)_app.ApplicationServices.GetService(job.Type);
                         await j.Invoke();
-                        var currentTime = DateTime.Now.AddSeconds(-DateTime.Now.Second);
-                        DateTime nextTime = DateTime.Now;
+
+                        var now = DateTime.Now;
+
+                        var currentTime = now.AddSeconds(-now.Second).AddMilliseconds(-now.Millisecond);
+                        DateTime nextTime = DateTime.MinValue;
+
                         var nextJobTimes = job.Cron.GetNextOccurrences(currentTime, DateTime.MaxValue);
                         foreach (var next in nextJobTimes)
                         {
@@ -37,7 +53,7 @@ namespace CronJobs.Infrastructure
                     }
                 });
             });
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
     }
 }

@@ -16,7 +16,7 @@ namespace CronJobs.Infrastructure
         }
         internal Task Start()
         {
-            _options.JobList.ForEach((job) =>
+            _options.GetJobs().ToList().ForEach((job) =>
             {
                 Task.Factory.StartNew(async () =>
                 {
@@ -31,7 +31,7 @@ namespace CronJobs.Infrastructure
                             var diff = firstRunTime - firstnow;
                             await Task.Delay(diff);
                             firstCheck = false;
-                        } 
+                        }
                         #endregion
 
                         var j = (ICronJob)_app.ApplicationServices.GetService(job.Type);

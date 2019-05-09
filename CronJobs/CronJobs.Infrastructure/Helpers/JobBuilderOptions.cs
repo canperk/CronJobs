@@ -7,16 +7,16 @@ namespace CronJobs.Infrastructure
 {
     public class JobBuilderOptions
     {
-        private IServiceCollection _services;
-        internal List<JobDescriptor> JobList { get; }
+        private IServiceCollection services;
+        private List<JobDescriptor> jobList;
         public IReadOnlyCollection<JobDescriptor> GetJobs()
         {
-            return JobList.AsReadOnly();
+            return jobList.AsReadOnly();
         }
         public JobBuilderOptions(IServiceCollection services)
         {
-            JobList = new List<JobDescriptor>();
-            _services = services;
+            jobList = new List<JobDescriptor>();
+            this.services = services;
         }
 
         public void Register<T>(string expression) where T : class, ICronJob
@@ -26,8 +26,8 @@ namespace CronJobs.Infrastructure
             {
                 throw new ArgumentOutOfRangeException($"{nameof(expression)} is not valid!");
             }
-            _services.AddTransient<T, T>();
-            JobList.Add(new JobDescriptor(cron, typeof(T)));
+            services.AddTransient<T, T>();
+            jobList.Add(new JobDescriptor(cron, typeof(T)));
         }
     }
 }
